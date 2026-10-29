@@ -61,3 +61,4 @@ data/curated/vector_db/*
 .pytest_cache/
 .coverage
 htmlcov/
+
