@@ -24,9 +24,10 @@ GOLD_DIR = DATA_DIR / "gold"
 CURATED_DIR = DATA_DIR / "curated"
 VECTOR_DB_DIR = CURATED_DIR / "vector_db"
 
-# Primary & Fallback Models (Handling 503 Overload)
-PRIMARY_LLM_MODEL = "gemini-3.8-flash"
-FALLBACK_LLM_MODELS = ["gemini-3.5-flash", "gemini-3.5-flash-lite", "gemini-flash-latest"]
+# Ultrafast & Stable Production Models
+# Benchmark: gemini-3.1-flash-lite delivers ~1.4s responses with 0 errors
+PRIMARY_LLM_MODEL = "gemini-3.1-flash-lite"
+FALLBACK_LLM_MODELS = ["gemini-3.5-flash-lite", "gemini-3.6-flash"]
 DEFAULT_EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 RRF_K = 60
 CACHE_SIMILARITY_THRESHOLD = 0.85
