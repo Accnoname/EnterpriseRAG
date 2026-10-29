@@ -24,8 +24,9 @@ GOLD_DIR = DATA_DIR / "gold"
 CURATED_DIR = DATA_DIR / "curated"
 VECTOR_DB_DIR = CURATED_DIR / "vector_db"
 
-# Model & RAG Constants (Latest 2026 Model Standard)
+# Primary & Fallback Models (Handling 503 Overload)
+PRIMARY_LLM_MODEL = "gemini-3.8-flash"
+FALLBACK_LLM_MODELS = ["gemini-3.5-flash", "gemini-3.5-flash-lite", "gemini-flash-latest"]
 DEFAULT_EMBEDDING_MODEL = "all-MiniLM-L6-v2"
-DEFAULT_LLM_MODEL = "gemini-3.8-flash"
 RRF_K = 60
 CACHE_SIMILARITY_THRESHOLD = 0.85

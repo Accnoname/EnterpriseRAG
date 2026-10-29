@@ -1,6 +1,6 @@
 """
 Interactive Enterprise Financial AI CLI Dashboard.
-Powered by Multi-Agent Dual-Engine System (DuckDB + Hybrid RAG + Gemini 3.8 Flash).
+Powered by Autonomous ReAct Agent Engine (Native Function Calling + Dual-Engine DuckDB & Hybrid RAG).
 """
 
 import sys
@@ -21,7 +21,8 @@ from src.adapters.duckdb_adapter import DuckDBAdapter
 from src.adapters.chroma_adapter import ChromaAdapter
 from src.core.hybrid_retriever import HybridRetriever
 from src.cache.semantic_cache import SemanticCache
-from src.agents.supervisor import RiskAnalystWorker, QuantitativeMetricWorker, InvestmentSupervisorAgent
+from src.agents.tools import AgentToolRegistry
+from src.agents.autonomous_agent import AutonomousFinancialAgent
 
 console = Console()
 
@@ -67,20 +68,19 @@ def initialize_demo_data(duck_adapter: DuckDBAdapter, chroma_adapter: ChromaAdap
 
 def main():
     console.print(Panel.fit(
-        "[bold cyan]🏛️ ENTERPRISE RAG: DUAL-ENGINE FINANCIAL MULTI-AGENT PLATFORM[/bold cyan]\n"
-        "[italic green]Ports-and-Adapters Architecture | DuckDB OLAP + Hybrid RAG + Gemini 3.8 Flash[/italic green]",
+        "[bold cyan]🏛️ ENTERPRISE RAG: AUTONOMOUS ReAct DUAL-ENGINE PLATFORM[/bold cyan]\n"
+        "[italic green]Native Gemini 3.8 Flash Function Calling | DuckDB OLAP + Hybrid RAG | 100% On Drive E[/italic green]",
         border_style="cyan"
     ))
 
-    with console.status("[bold yellow]Initializing Database Adapters & Hybrid Retriever..."):
+    with console.status("[bold yellow]Initializing Database Adapters & Autonomous ReAct Engine..."):
         duck = DuckDBAdapter()
         chroma = ChromaAdapter()
         retriever = initialize_demo_data(duck, chroma)
         cache = SemanticCache()
 
-        risk_worker = RiskAnalystWorker(retriever=retriever)
-        metric_worker = QuantitativeMetricWorker(query_engine=duck)
-        supervisor = InvestmentSupervisorAgent(risk_worker=risk_worker, metric_worker=metric_worker)
+        tool_registry = AgentToolRegistry(retriever=retriever, duckdb_adapter=duck)
+        agent = AutonomousFinancialAgent(tool_registry=tool_registry)
 
     # Display Metrics Table
     table = Table(title="📊 Pre-Loaded Gold Layer: Snappy Columnar Financial Metrics")
@@ -95,23 +95,23 @@ def main():
     console.print(table)
 
     query = "So sánh rủi ro chuỗi cung ứng và tốc độ tăng trưởng doanh thu giữa NVDA và MSFT"
-    console.print(f"\n[bold green]💡 Demo Query:[/bold green] [italic]'{query}'[/italic]\n")
+    console.print(f"\n[bold green]💡 User Goal:[/bold green] [italic]'{query}'[/italic]\n")
 
     # Check Semantic Cache
     cached_response = cache.get(query)
     if cached_response:
-        console.print("[bold yellow]⚡ [CACHE HIT][/bold yellow] Trả kết quả tức thì trong 5ms!")
+        console.print("[bold yellow]⚡ [SEMANTIC CACHE HIT][/bold yellow] Trả kết quả tức thì trong 5ms với chi phí $0!")
         console.print(Panel(Markdown(cached_response), title="📄 Executive Investment Memorandum (Cached)"))
         return
 
-    # Execute Multi-Agent Workflow
-    with console.status("[bold magenta]Supervisor coordinating Workers (Risk Analyst + Quantitative Sandbox)..."):
-        state = supervisor.run(user_query=query, target_entities=["NVDA", "MSFT"])
+    # Execute Autonomous ReAct Loop
+    with console.status("[bold magenta]Autonomous ReAct Loop running (Thinking -> Deciding Tools -> Observing -> Reflecting)..."):
+        state = agent.run(user_query=query, target_entities=["NVDA", "MSFT"])
 
     # Audit Trail Table
-    audit_tbl = Table(title="🔍 Multi-Agent Audit Trail & Orchestration Log")
+    audit_tbl = Table(title="🤖 Autonomous Agent Reasoning & ReAct Execution Trail")
     audit_tbl.add_column("Step", style="white", justify="center")
-    audit_tbl.add_column("Agent Action", style="cyan")
+    audit_tbl.add_column("Autonomous Action / Observation", style="cyan")
     for idx, act in enumerate(state.audit_trail, start=1):
         audit_tbl.add_row(str(idx), act)
     console.print(audit_tbl)
@@ -119,7 +119,7 @@ def main():
     # Render Final Memo
     console.print(Panel(
         Markdown(state.final_memo or "No report synthesized."),
-        title="📈 Executive Investment Memorandum (Synthesized with Citations & Exact Math)",
+        title="📈 Executive Investment Memorandum (Synthesized Autonomously)",
         border_style="green"
     ))
 
